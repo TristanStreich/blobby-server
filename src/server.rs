@@ -13,7 +13,7 @@ use actix_web::{
 };
 use std::io::Result as IOResult;
 
-const PORT: u16 = 3004;
+use crate::ENV;
 
 pub async fn start_server() -> IOResult<()> {
     HttpServer::new(|| {
@@ -23,7 +23,7 @@ pub async fn start_server() -> IOResult<()> {
             .service(landing_page)
             .service(icon)
     })
-    .bind(("0.0.0.0", PORT))?
+    .bind(("0.0.0.0", ENV.port0))?
     .run()
     .await
 }

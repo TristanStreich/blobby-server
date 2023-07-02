@@ -1,9 +1,12 @@
 mod server;
+mod env;
 
 use anyhow::{
     Context,
     Result as AnyResult,
 };
+
+use env::ENV;
 
 #[tokio::main]
 async fn main() -> AnyResult<()> {
@@ -12,6 +15,8 @@ async fn main() -> AnyResult<()> {
         .target(env_logger::Target::Stdout)
         .init();
 
-    log::info!("Starting Server");
+    log::info!("Starting Server With Env {:#?}", *ENV);
+
+    log::info!("Starting Server on Port {}", ENV.port0);
     server::start_server().await.context("Server Crashed")
 }
