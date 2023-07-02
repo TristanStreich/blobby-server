@@ -1,5 +1,5 @@
-mod server;
 mod env;
+mod server;
 
 use anyhow::{
     Context,

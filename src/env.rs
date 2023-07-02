@@ -1,6 +1,6 @@
 use std::{
-    str::FromStr,
     error::Error,
+    str::FromStr,
 };
 
 use anyhow::{
@@ -8,10 +8,9 @@ use anyhow::{
     Result as AnyResult,
 };
 
-lazy_static::lazy_static!{
+lazy_static::lazy_static! {
     pub static ref ENV: Variables = Variables::init().unwrap();
 }
-
 
 #[derive(Debug)]
 pub struct Variables {
@@ -21,16 +20,16 @@ pub struct Variables {
 impl Variables {
     fn init() -> AnyResult<Self> {
         Ok(Variables {
-            port0: get("PORT0")?
+            port0: get("PORT0")?,
         })
     }
 }
 
 fn get<T, E>(name: &str) -> AnyResult<T>
-    where
-        T: FromStr<Err = E>,
-        E: Send + Sync + Error + 'static,
-    {
+where
+    T: FromStr<Err = E>,
+    E: Send + Sync + Error + 'static,
+{
     std::env::var(name)
         .context(format!("Failed To Get Env Var {name}"))?
         .parse()
