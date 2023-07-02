@@ -1,16 +1,18 @@
 use actix_web::{
     get,
-    HttpServer,
-    App,
-    Responder,
-    HttpResponse,
-    http::{StatusCode, header::ContentType},
+    http::{
+        header::ContentType,
+        StatusCode,
+    },
     middleware::Logger,
+    App,
+    HttpResponse,
+    HttpServer,
+    Responder,
 };
 use std::io::Result as IOResult;
 
 const PORT: u16 = 3000;
-
 
 pub async fn start_server() -> IOResult<()> {
     HttpServer::new(|| {
@@ -24,12 +26,10 @@ pub async fn start_server() -> IOResult<()> {
     .await
 }
 
-
 #[get("/hello")]
 async fn hello() -> impl Responder {
     "Hello"
 }
-
 
 #[get("/")]
 async fn landing_page() -> impl Responder {
