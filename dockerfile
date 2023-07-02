@@ -1,5 +1,7 @@
 FROM rust
 
+LABEL blobby_server=""
+
 WORKDIR /usr/src
 COPY . .
 

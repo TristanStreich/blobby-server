@@ -5,6 +5,7 @@ use actix_web::{
     Responder,
     HttpResponse,
     http::{StatusCode, header::ContentType},
+    middleware::Logger,
 };
 use std::io::Result as IOResult;
 
@@ -14,6 +15,7 @@ const PORT: u16 = 3000;
 pub async fn start_server() -> IOResult<()> {
     HttpServer::new(|| {
         App::new()
+            .wrap(Logger::default())
             .service(hello)
             .service(landing_page)
     })

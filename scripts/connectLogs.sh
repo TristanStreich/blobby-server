@@ -1,0 +1,1 @@
+docker ps --filter "label=blobby_server" | grep blobby-server | awk '{ print $1 }' | xargs docker logs -f

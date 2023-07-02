@@ -2,6 +2,12 @@
 
 IMAGE=blobby-server
 
+PREV_VERSION=$(docker images | grep blobby-server | head -n 1 | awk '{ print $2 }')
+
+print_prev_version() {
+  echo "Previous Docker Verson: $PREV_VERSION"
+}
+
 # Parse command-line options
 while getopts "v:" opt; do
   case $opt in
@@ -13,6 +19,7 @@ done
 if [ -z "$VERSION" ]
 then
     echo "missing required flag -v"
+    print_prev_version
     exit 1
 fi
 
@@ -23,6 +30,7 @@ TAG="$IMAGE:$VERSION"
 if docker images --format "{{.Repository}}:{{.Tag}}" | grep -q "$TAG"
 then
   echo "Image $IMAGE:$TAG already exists."
+  print_prev_version
   exit 1
 fi
 
