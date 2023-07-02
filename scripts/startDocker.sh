@@ -1,6 +1,6 @@
 # Stop Old Container
 echo "Stopping Previous Container:"
-docker ps --filter "label=blobby_server" | grep blobby-server | awk '{ print $1 }' | xargs docker stop
+docker ps --filter "label=blobby_server" | grep -v CONTAINER | awk '{ print $1 }' | xargs docker stop
 echo ""
 
 # Set env vars
@@ -22,4 +22,7 @@ docker run \
     --env-file .env_file \
     blobby-server
 
+# Check Server Logs
+sleep 3
 docker ps | grep blobby-server
+docker ps | grep blobby-server | awk '{ print $1 }' | xargs docker logs
