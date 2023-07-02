@@ -9,10 +9,11 @@ use actix_web::{
     HttpResponse,
     HttpServer,
     Responder,
+    Result as ActixResult,
 };
 use std::io::Result as IOResult;
 
-const PORT: u16 = 3000;
+const PORT: u16 = 3004;
 
 pub async fn start_server() -> IOResult<()> {
     HttpServer::new(|| {
@@ -20,6 +21,7 @@ pub async fn start_server() -> IOResult<()> {
             .wrap(Logger::default())
             .service(hello)
             .service(landing_page)
+            .service(icon)
     })
     .bind(("0.0.0.0", PORT))?
     .run()
@@ -32,8 +34,15 @@ async fn hello() -> impl Responder {
 }
 
 #[get("/")]
-async fn landing_page() -> impl Responder {
-    HttpResponse::build(StatusCode::OK)
+async fn landing_page() -> ActixResult<HttpResponse> {
+    Ok(HttpResponse::build(StatusCode::OK)
         .content_type(ContentType::html())
-        .body(std::fs::read_to_string("res/landingpage.html").unwrap())
+        .body(std::fs::read_to_string("res/landingpage.html")?))
+}
+
+#[get("/favicon.ico")]
+async fn icon() -> ActixResult<HttpResponse> {
+    Ok(HttpResponse::Ok()
+        .content_type("image/x-icon")
+        .body(std::fs::read("res/blob.ico")?))
 }
