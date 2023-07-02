@@ -6,6 +6,7 @@ echo ""
 # Set env vars
 cat <<EOF > .env_file
 RUST_LOG=debug
+PORT0=3000
 EOF
 
 echo "Passing In Env Vars:"
