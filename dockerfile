@@ -1,14 +1,29 @@
+FROM ubuntu:20.04 AS base
+
+LABEL blobby_server=""
+WORKDIR /usr/src
+
+# install runtime deps here
+
+FROM base AS rust
+
+RUN apt-get update
+RUN apt-get install -y --fix-missing \
+    	build-essential \
+    	curl
+
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+
 # ~~~ Build dependencies to cache them ~~~ #
 FROM rust AS build_deps
-
-WORKDIR /usr/src
 
 COPY Cargo.toml .
 COPY Cargo.lock .
 
 RUN mkdir ./src
 RUN echo 'fn main() {println!("Hi")}' > ./src/main.rs
-RUN touch ./src/lib.rs
 
 
 RUN cargo build --release
@@ -24,14 +39,9 @@ RUN rm -f build.properties
 RUN cargo build --release
 
 # ~~~ Copy binaries over for final run ~~~ #
-FROM rust as final
+FROM base as final
 
-COPY --from=build_server /usr/src/target/release /usr/src/release
-COPY --from=build_server /usr/src/res /usr/src/release/res
+COPY --from=build_server /usr/src/target/release/blobby-server /usr/src/blobby-server
+COPY --from=build_server /usr/src/res /usr/src/res
 
-LABEL blobby_server=""
-
-WORKDIR /usr/src/release
 CMD ["./blobby-server"]
-#CMD ["cargo", "run", "--release"]
-#CMD ["./target/release/blobby-server" ]
