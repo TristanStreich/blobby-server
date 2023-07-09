@@ -2,7 +2,7 @@
 
 IMAGE=blobby-server
 
-PREV_VERSION=$(docker images | grep blobby-server | head -n 1 | awk '{ print $2 }')
+PREV_VERSION=$(docker images | grep blobby-server | grep -v latest | sort -k2 -r -V | head -n 1 | awk '{ print $2 }')
 
 print_prev_version() {
   echo "Previous Docker Verson: $PREV_VERSION"
