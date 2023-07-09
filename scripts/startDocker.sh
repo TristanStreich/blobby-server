@@ -3,10 +3,14 @@ echo "Stopping Previous Container:"
 docker ps --filter "label=blobby_server" | grep -v CONTAINER | awk '{ print $1 }' | xargs docker stop
 echo ""
 
+# Read secret env vars from disk
+GPT_API_KEY=$(more ~/.gpt_api_key)
+
 # Set env vars
 cat <<EOF > .env_file
 RUST_LOG=debug
 PORT0=3000
+GPT_API_KEY=$GPT_API_KEY
 EOF
 
 echo "Passing In Env Vars:"

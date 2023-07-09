@@ -7,10 +7,13 @@ WORKDIR /usr/src
 
 FROM base AS rust
 
+# install build deps here
 RUN apt-get update
 RUN apt-get install -y --fix-missing \
     	build-essential \
-    	curl
+    	curl \
+		libssl-dev \
+		pkg-config
 
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
