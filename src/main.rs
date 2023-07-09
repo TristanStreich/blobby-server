@@ -1,11 +1,11 @@
-mod env;
-mod server;
 mod clients;
+mod env;
 mod error;
+mod server;
 
 use error::{
-    MyResult,
     Context,
+    MyResult,
 };
 
 use log::info;

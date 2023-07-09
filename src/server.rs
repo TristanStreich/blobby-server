@@ -1,15 +1,15 @@
 use actix_web::{
-    web::{
-        Data as AppData,
-        Json,
-    },
     get,
-    post,
     http::{
         header::ContentType,
         StatusCode,
     },
     middleware::Logger,
+    post,
+    web::{
+        Data as AppData,
+        Json,
+    },
     App,
     HttpResponse,
     HttpServer,
@@ -20,8 +20,8 @@ use serde_json::Value as JsonValue;
 use std::io::Result as IOResult;
 
 use crate::{
-    ENV,
     clients::GptClient,
+    ENV,
 };
 
 pub async fn start_server() -> IOResult<()> {

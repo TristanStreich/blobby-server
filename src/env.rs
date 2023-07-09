@@ -4,8 +4,8 @@ use std::{
 };
 
 use crate::error::{
-    MyResult,
     Context,
+    MyResult,
 };
 
 lazy_static::lazy_static! {
@@ -35,6 +35,5 @@ where
     Ok(std::env::var(name)
         .context(format!("Failed To Get Env Var {name}"))?
         .parse()
-        .context(format!("Failed To Parse Env Var {name}"))?
-    )
+        .context(format!("Failed To Parse Env Var {name}"))?)
 }

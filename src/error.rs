@@ -1,9 +1,9 @@
 use actix_web::{
-    ResponseError,
-    HttpResponse,
     body::BoxBody,
     http::StatusCode,
+    HttpResponse,
     HttpResponseBuilder,
+    ResponseError,
 };
 use std::fmt::Display;
 
@@ -25,32 +25,31 @@ impl Display for MyError {
 impl<E: Into<anyhow::Error>> From<E> for MyError {
     fn from(value: E) -> Self {
         Self {
-            inner: value.into()
+            inner: value.into(),
         }
     }
 }
 
-
 impl ResponseError for MyError {
     fn error_response(&self) -> HttpResponse<BoxBody> {
-        HttpResponseBuilder::new(StatusCode::INTERNAL_SERVER_ERROR)
-            .body(format!("{}", self.inner))
+        HttpResponseBuilder::new(StatusCode::INTERNAL_SERVER_ERROR).body(format!("{}", self.inner))
     }
 }
-
 
 pub trait Context<T, E> {
     // Required methods
     fn context<C>(self, context: C) -> MyResult<T>
-       where C: Display + Send + Sync + 'static;
+    where
+        C: Display + Send + Sync + 'static;
 }
 
-
 impl<K, T, E> Context<T, E> for K
-    where K: anyhow::Context<T, E>
+where
+    K: anyhow::Context<T, E>,
 {
     fn context<C>(self, context: C) -> MyResult<T>
-           where C: Display + Send + Sync + 'static
+    where
+        C: Display + Send + Sync + 'static,
     {
         Ok(self.context(context)?)
     }
