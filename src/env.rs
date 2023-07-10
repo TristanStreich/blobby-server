@@ -3,9 +3,9 @@ use std::{
     str::FromStr,
 };
 
-use anyhow::{
+use crate::error::{
     Context,
-    Result as AnyResult,
+    MyResult,
 };
 
 lazy_static::lazy_static! {
@@ -15,17 +15,19 @@ lazy_static::lazy_static! {
 #[derive(Debug)]
 pub struct Variables {
     pub port0: u16,
+    pub gpt_api_key: String,
 }
 
 impl Variables {
-    fn init() -> AnyResult<Self> {
+    fn init() -> MyResult<Self> {
         Ok(Variables {
             port0: get("PORT0")?,
+            gpt_api_key: get("GPT_API_KEY")?,
         })
     }
 }
 
-fn get<T, E>(name: &str) -> AnyResult<T>
+fn get<T, E>(name: &str) -> MyResult<T>
 where
     T: FromStr<Err = E>,
     E: Send + Sync + Error + 'static,

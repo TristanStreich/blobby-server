@@ -1,9 +1,11 @@
+mod clients;
 mod env;
+mod error;
 mod server;
 
-use anyhow::{
+use error::{
     Context,
-    Result as AnyResult,
+    MyResult,
 };
 
 use log::info;
@@ -11,7 +13,7 @@ use log::info;
 use env::ENV;
 
 #[tokio::main]
-async fn main() -> AnyResult<()> {
+async fn main() -> MyResult<()> {
     env_logger::builder()
         .parse_default_env()
         .target(env_logger::Target::Stdout)

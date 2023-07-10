@@ -5,23 +5,34 @@ use actix_web::{
         StatusCode,
     },
     middleware::Logger,
+    post,
+    web::{
+        Data as AppData,
+        Json,
+    },
     App,
     HttpResponse,
     HttpServer,
     Responder,
     Result as ActixResult,
 };
+use serde_json::Value as JsonValue;
 use std::io::Result as IOResult;
 
-use crate::ENV;
+use crate::{
+    clients::GptClient,
+    ENV,
+};
 
 pub async fn start_server() -> IOResult<()> {
     HttpServer::new(|| {
         App::new()
+            .app_data(AppData::new(GptClient::new()))
             .wrap(Logger::default())
             .service(hello)
             .service(landing_page)
             .service(icon)
+            .service(gpt)
     })
     .bind(("0.0.0.0", ENV.port0))?
     .run()
@@ -45,4 +56,9 @@ async fn icon() -> ActixResult<HttpResponse> {
     Ok(HttpResponse::Ok()
         .content_type("image/x-icon")
         .body(std::fs::read("res/blob.ico")?))
+}
+
+#[post("/gpt")]
+async fn gpt(request: Json<JsonValue>, client: AppData<GptClient>) -> ActixResult<Json<JsonValue>> {
+    Ok(Json(client.chat(request.0).await?))
 }
